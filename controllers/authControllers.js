@@ -1,4 +1,6 @@
 const adminModel = require('../models/adminModel')
+const sellerModel = require('../models/sellerModel')
+
 const bcrypt = require('bcrypt')
 const {responseReturn} = require('../utils/response')
 const jwt = require('jsonwebtoken')
@@ -34,6 +36,38 @@ class authControllers {
            responseReturn(res, 500 , {error: error.message})
     }
  };
+  
+  
+ seller_register = async(req , res) => {
+    
+    const {email , name , password , favoriteBike} = req.body
+    
+    try{
+      const getUser = await sellerModel.findOne({email})
+      if(getUser){
+        responseReturn(res , 404 , {error: 'Email already exits'})
+      }else{
+        const seller = await sellerModel.create({
+          name,
+          email,
+          favoriteBike,
+          password : await bcrypt.hash(password, 10),
+          method:'menualy',
+          shopInfo:{}
+        })
+         
+        const token = await createToken({id: seller.id , role: seller.role})
+        res.cookie('accessToken' , token, {
+          expires: new Date(Date.now() + 5 * 24 * 60 * 60 * 100 )
+        })
+
+        responseReturn(res , 201 , { token, message:'Register Success'})
+      }
+    }catch(error){
+         responseReturn(res , 500 , {error: 'Internal server error'})
+    }
+
+ }
 
   getUser = async(req,res) => {
     const {id , role} = req;
