@@ -5,6 +5,8 @@ const bcrypt = require('bcrypt')
 const {responseReturn} = require('../utils/response')
 const jwt = require('jsonwebtoken')
 const {createToken} = require('../utils/tokenCreate')
+
+
 class authControllers {
  admin_login = async (req , res) => {
     const {email , password} = req.body
@@ -37,6 +39,41 @@ class authControllers {
     }
  };
   
+
+
+
+  seller_login = async (req , res) => {
+    const {email , password} = req.body
+    
+
+    try{
+     const seller = await sellerModel.findOne({email}).select('+password');
+
+     if(seller){
+        const match = await bcrypt.compare(password, seller.password)
+        if(match){
+             const token = await createToken({
+               id: seller.id,
+               role: seller.role
+             }) ;
+
+             res.cookie('accessToken', token,{
+               expires : new Date(Date.now() + 5*24*60*60*100)
+             });
+             responseReturn(res,200,{token,message:'Login Success'})
+        } else{
+         responseReturn(res, 404 , {error: 'Wrong credentials'})
+        }
+     }else{
+       responseReturn(res , 404 , {error: 'Email not found'})
+     }
+     
+    }catch(error){
+           responseReturn(res, 500 , {error: error.message})
+    }
+ };
+  
+
   
  seller_register = async(req , res) => {
     
@@ -76,10 +113,12 @@ class authControllers {
         const user = await adminModel.findById(id)
         responseReturn(res, 200, {userInfo: user})
       }else{
-        console.log('seller info')
+        
+          const seller = await sellerModel.findById(id)
+          responseReturn(res, 200, {userInfo: seller})
       }
     }catch(error){
-          console.log(error.message)
+      responseReturn(res , 500 , {error: 'Internal server error'})
     }
   }
 

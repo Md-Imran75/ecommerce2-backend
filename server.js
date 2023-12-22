@@ -16,7 +16,11 @@ app.use(bodyParser.json())
 app.use(cookieParser())
 
 app.use('/api' , require('./routes/authRoutes'))
-app.get('/' , (req , res) => res.send('Hello world') )
+app.use('/api' , require('./routes/dashboard/modelRoutes'))
+app.use('/api' , require('./routes/dashboard/brandRoutes'))
+app.use('/api', require('./routes/dashboard/productRoutes'))
+
+app.get('/' , (_req , res) => res.send('Hello world') )
 
 
 const port = process.env.PORT
