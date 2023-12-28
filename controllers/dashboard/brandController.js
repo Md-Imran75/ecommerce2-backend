@@ -40,7 +40,7 @@ class brandController {
                 try {
 
                     const result = await cloudinary.uploader.upload(String(image[0].filepath), { folder: 'brands' });
-
+                     console.log('result',result)
 
                     if (result && result.url) {
                         const brand = await brandModel.create({
@@ -53,6 +53,7 @@ class brandController {
                         responseReturn(res, 404, { error: 'Image upload failed' })
                     }
                 } catch (error) {
+                    console.log( 'errror' , error)
                     responseReturn(res, 500, { error: 'Internal server error' })
                 }
 

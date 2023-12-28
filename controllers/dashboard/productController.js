@@ -34,8 +34,20 @@ class productController {
                 taxValid = taxValid[0];
             }
             name = name.trim()
-            const slug = name.split(' ').join('-')
+            let slug = name.split(' ').join('-')
 
+            let existingProducts = await productModel.find({ slug });
+
+            if (existingProducts.length > 0) {
+                // If the slug already exists, append a suffix to make it unique
+                let suffix = 1;
+                while (existingProducts.length > 0) {
+                    slug = `${name.split(' ').join('-')}-${suffix}`;
+                    existingProducts = await productModel.find({ slug });
+                    suffix++;
+                }
+            }
+    
 
 
             cloudinary.config({
@@ -126,16 +138,19 @@ class productController {
         }
     }
     product_update = async (req, res) => {
-        let { name, cc, ml, fi, kilometerAs, regYear, taxValid, abs, description, price, productId, stock } = req.body;
+        let { name, cc, ml, fi,model , brand, kilometerAs, regYear, taxValid, abs, description, price, productId, stock } = req.body;
 
         if (Array.isArray(name)) {
             name = name[0];
         }
         name = name.trim()
         const slug = name.split(' ').join('-')
+
+       
+        
         try {
             await productModel.findByIdAndUpdate(productId, {
-                name, cc, ml, fi, kilometerAs, regYear, taxValid, abs, description, price, productId, stock, slug
+                name, cc, ml, fi,model , brand, kilometerAs, regYear, taxValid, abs, description, price, productId, stock, slug
             })
             const product = await productModel.findById(productId)
             responseReturn(res, 200, { product, message: 'product update success' })
