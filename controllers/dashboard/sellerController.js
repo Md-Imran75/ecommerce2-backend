@@ -69,7 +69,6 @@ class sellerController {
             }
 
         } catch (error) {
-            console.log('active seller get ' + error.message)
             responseReturn(res, 500, { error: error.message })
 
         }

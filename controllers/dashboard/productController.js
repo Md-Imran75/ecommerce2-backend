@@ -124,7 +124,7 @@ class productController {
                 responseReturn(res, 200, { totalProduct, products })
             }
         } catch (error) {
-            console.log(error.message)
+            responseReturn(res, 500, { error: error.message });
         }
     }
 
@@ -134,9 +134,129 @@ class productController {
             const product = await productModel.findById(productId)
             responseReturn(res, 200, { product })
         } catch (error) {
-            console.log(error.message)
+            responseReturn(res, 500, { error: error.message });
+            
         }
     }
+
+
+    allProducts_get_for_admin = async (req, res) => {
+        const { page, searchValue, perPage } = req.query;
+    
+        const skipPage = parseInt(perPage) * (parseInt(page) - 1);
+    
+        try {
+            let query = {};
+    
+            if (searchValue) {
+                query = {
+                    $text: { $search: searchValue }
+                };
+            }
+    
+            const products = await productModel.find(query).skip(skipPage).limit(perPage).sort({ createdAt: -1 });
+            const totalProduct = await productModel.find(query).countDocuments();
+    
+            responseReturn(res, 200, { totalProduct, products });
+        } catch (error) {
+            
+            responseReturn(res, 500, { error: error.message });
+        }
+    };
+
+    get_product_request = async (req, res) => {
+        const { page, perPage } = req.query
+        const skipPage = parseInt(perPage) * (parseInt(page) - 1)
+        try {
+            
+                const products = await productModel.find({ status: 'pending' }).skip(skipPage).limit(perPage).sort({ createdAt: -1 })
+                const totalProduct = await productModel.find({ status: 'pending' }).countDocuments()
+                responseReturn(res, 200, { totalProduct, products })
+            
+            } catch (error) {
+            responseReturn(res, 500, { error: error.message })
+        }
+    }
+    
+    product_status_update = async (req, res) => {
+        const { productId, status } = req.body; // Change `sellerId` to `productId`
+        try {
+            await productModel.findByIdAndUpdate(productId, {
+                status
+            });
+    
+            const updatedProduct = await productModel.findById(productId);
+            responseReturn(res, 200, { product: updatedProduct, message: 'Product status update success' });
+        } catch (error) {
+            responseReturn(res, 500, { error: error.message });
+        }
+    }
+    
+
+    get_active_products = async (req, res) => {
+        let { page, searchValue, perPage } = req.query
+        page = parseInt(page)
+        perPage = parseInt(perPage)
+
+        const skipPage = perPage * (page - 1)
+
+        try {
+            if (searchValue) {
+                const products = await productModel.find({
+                    $text: { $search: searchValue },
+                    status: 'active'
+                }).skip(skipPage).limit(perPage).sort({ createdAt: -1 })
+
+                const totalProduct = await productModel.find({
+                    $text: { $search: searchValue },
+                    status: 'active'
+                }).countDocuments()
+
+                responseReturn(res, 200, { totalProduct, products })
+            } else {
+                const products = await productModel.find({ status: 'active' }).skip(skipPage).limit(perPage).sort({ createdAt: -1 })
+                const totalProduct = await productModel.find({ status: 'active' }).countDocuments()
+                responseReturn(res, 200, { totalProduct, products })
+            }
+
+        } catch (error) {
+            responseReturn(res, 500, { error: error.message })
+
+        }
+    }
+
+    get_rejected_products = async (req, res) => {
+        let { page, searchValue, perPage } = req.query
+        page = parseInt(page)
+        perPage = parseInt(perPage)
+
+        const skipPage = perPage * (page - 1)
+
+        try {
+            if (searchValue) {
+                const products = await productModel.find({
+                    $text: { $search: searchValue },
+                    status: 'rejected'
+                }).skip(skipPage).limit(perPage).sort({ createdAt: -1 })
+
+                const totalProduct = await productModel.find({
+                    $text: { $search: searchValue },
+                    status: 'rejected'
+                }).countDocuments()
+
+                responseReturn(res, 200, { totalProduct, products })
+            } else {
+                const products = await productModel.find({ status: 'rejected' }).skip(skipPage).limit(perPage).sort({ createdAt: -1 })
+                const totalProduct = await productModel.find({ status: 'rejected' }).countDocuments()
+                responseReturn(res, 200, { totalProduct, products })
+            }
+
+        } catch (error) {
+            responseReturn(res, 500, { error: error.message })
+
+        }
+    }
+
     product_update = async (req, res) => {
         let { name, cc, ml, fi,model , brand, kilometerAs, regYear, taxValid, abs, description, price, productId, stock } = req.body;
 
