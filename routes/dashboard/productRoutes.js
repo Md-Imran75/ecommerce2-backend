@@ -8,6 +8,7 @@ router.get('/product-get/:productId', authMiddleware, productController.product_
 router.post('/product-update', authMiddleware, productController.product_update)
 router.post('/product-image-update', authMiddleware, productController.product_image_update)
 router.post('/document-image-update', authMiddleware, productController.document_image_update)
+router.post('/delete-product', authMiddleware, productController.delete_product);
 
 
 module.exports = router

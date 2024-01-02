@@ -207,6 +207,17 @@ class productController {
         });
     };
     
+
+    delete_product = async (req, res) => {
+        const { productId } = req.body;
+        try {
+            await productModel.findByIdAndDelete(productId);
+            responseReturn(res, 200, { message: 'Product deleted successfully' });
+        } catch (error) {
+            responseReturn(res, 500, { error: error.message });
+        }
+    };
+    
     
 
 

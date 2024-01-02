@@ -45,9 +45,20 @@ const sellerSchema = new Schema({
         type: Object,
         default : {}
     },
-
+    resetPasswordToken: String,
+    resetPasswordExpires: Date,
 
 
 },{timestamps : true});
+
+sellerSchema.index({
+    name: 'text',
+    email: 'text'
+}, {
+    weights: {
+        name: 5,
+        email: 4,
+    }
+})
 
 module.exports = model('sellers' , sellerSchema)
