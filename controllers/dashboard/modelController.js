@@ -60,6 +60,18 @@ class modelController {
         })
     }
 
+    delete_model = async (req, res) => {
+        const { modelId } = req.body;
+        try {
+            await modelModel.findByIdAndDelete(modelId);
+            responseReturn(res, 200, { message: 'Model deleted successfully' });
+        } catch (error) {
+            responseReturn(res, 500, { error: error.message });
+        }
+    };
+    
+    
+
     get_model = async (req, res) => {
         const { page, searchValue, perPage } = req.query
         try {

@@ -154,6 +154,26 @@ class authControllers {
     }
 };
 
+ admin_change_seller_password = async (req, res) => {
+  const { email, newPassword } = req.body;
+
+  try {
+      const seller = await sellerModel.findOne({ email }).select('+password');
+      if (!seller) {
+          responseReturn(res, 404, { error: 'Seller not found' });
+          return;
+      }
+
+      await sellerModel.findByIdAndUpdate(seller._id, {
+        password: await bcrypt.hash(newPassword, 10),
+    });
+
+      responseReturn(res, 200, { message: 'Password changed successfully' });
+  } catch (error) {
+    console.log(error)
+      responseReturn(res, 500, { error: error.message });
+  }
+};
 
 
   profile_image_upload = async (req, res) => {

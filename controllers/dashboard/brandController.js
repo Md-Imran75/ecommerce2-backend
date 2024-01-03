@@ -61,6 +61,18 @@ class brandController {
         })
     }
 
+    delete_brand = async (req, res) => {
+        const { brandId } = req.body;
+        try {
+            await brandModel.findByIdAndDelete(brandId);
+            responseReturn(res, 200, { message: 'Brand deleted successfully' });
+        } catch (error) {
+            responseReturn(res, 500, { error: error.message });
+        }
+    };
+    
+    
+
     get_brand = async (req, res) => {
         const { page, searchValue, perPage } = req.query
         try {

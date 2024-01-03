@@ -72,6 +72,61 @@ class customerAuthController {
         }
     }
 
+   
+    customer_change_password = async (req, res) => {
+        const { email, oldPassword, newPassword } = req.body;
+    
+        try {
+            const customer = await customerModel.findOne({ email }).select('+password');
+            if (!customer) {
+                responseReturn(res, 404, { error: 'Email not found' });
+                return;
+            }
+    
+            const match = await bcrypt.compare(oldPassword, customer.password);
+
+            if (!match) {
+                responseReturn(res, 401, { error: 'Old password is incorrect' });
+                return;
+            }
+    
+            await customerModel.findByIdAndUpdate(customer._id, {
+              password: await bcrypt.hash(newPassword, 10),
+          });
+    
+            responseReturn(res, 200, { message: 'Password changed successfully' });
+        } catch (error) {
+            responseReturn(res, 500, { error: error.message });
+        }
+    };
+    
+     forget_password = async (req, res) => {
+      const { email, phone , newPassword } = req.body;
+    
+      try {
+          const customerEmail = await customerModel.findOne({ email }).select('+password');
+          if (!customerEmail) {
+              responseReturn(res, 404, { error: 'Email not found' });
+              return;
+          }
+          const customer = await customerModel.findOne({ phone }).select('+password');
+          if (!customer) {
+              responseReturn(res, 404, { error: 'Phone not found' });
+              return;
+          }
+    
+          await customerModel.findByIdAndUpdate(customer._id, {
+            password: await bcrypt.hash(newPassword, 10),
+        });
+    
+          responseReturn(res, 200, { message: 'Password changed successfully' });
+      } catch (error) {
+          responseReturn(res, 500, { error: error.message });
+      }
+    };
+
+
+
     customer_logout = async(_req,res)=>{
         res.cookie('customerToken',"",{
             expires : new Date(Date.now())

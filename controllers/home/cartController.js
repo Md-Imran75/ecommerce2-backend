@@ -245,6 +245,7 @@ class cartController {
         const {
             wishlistId
         } = req.params
+        console.log(req.params)
         try {
             const wishlist = await wishlistModel.findByIdAndDelete(wishlistId)
             responseReturn(res, 200, {
