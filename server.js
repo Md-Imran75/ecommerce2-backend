@@ -110,11 +110,13 @@ app.use(bodyParser.json())
 app.use(cookieParser())
 
 app.use('/api', require('./routes/chatRoutes'))
-
+app.use('/api', require('./routes/dashboard/dashboardIndexRoutes'))
 app.use('/api' , require('./routes/authRoutes'))
 app.use('/api' , require('./routes/dashboard/modelRoutes'))
 app.use('/api' , require('./routes/dashboard/sellerRoutes'))
 app.use('/api' , require('./routes/dashboard/brandRoutes'))
+app.use('/api' , require('./routes/dashboard/bannerRoutes'))
+
 app.use('/api', require('./routes/dashboard/productRoutes'))
 app.use('/api/home', require('./routes/home/homeRoutes'))
 app.use('/api', require('./routes/home/customerAuthRoutes'))

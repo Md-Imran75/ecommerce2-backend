@@ -131,7 +131,7 @@ class homeControllers {
     }
 
     query_products = async (req, res) => {
-        const perPage = 15
+        const perPage = 10
         req.query.perPage = perPage
         try {
             const products = await productModel.find({}).sort({

@@ -358,7 +358,7 @@ class orderController {
 
     //         await myShopWallet.create({
     //             amount: cuOrder.price,
-    //             manth: splitTime[0],
+    //             month: splitTime[0],
     //             year: splitTime[2],
     //         })
 
@@ -366,7 +366,7 @@ class orderController {
     //             await sellerWallet.create({
     //                 sellerId: auOrder[i].sellerId.toString(),
     //                 amount: auOrder[i].price,
-    //                 manth: splitTime[0],
+    //                 month: splitTime[0],
     //                 year: splitTime[2],
     //             })
     //         }
