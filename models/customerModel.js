@@ -22,6 +22,10 @@ const customerSchema = new Schema({
         required: true,
         select: false
     },
+    image: {
+        type: String,
+        default : ''
+    },
     method: {
         type: String,
         required: true,

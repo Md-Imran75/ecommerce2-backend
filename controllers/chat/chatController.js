@@ -12,7 +12,7 @@ class chatController {
             const sellers = await sellerModel.find({})
             responseReturn(res, 200, { sellers })
         } catch (error) {
-            console.log(error)
+            responseReturn(res, 500, { error: 'Internal server error' });
         }
     }
 
@@ -27,7 +27,8 @@ class chatController {
             })
             responseReturn(res, 200, { message: messageData })
         } catch (error) {
-            console.log(error)
+            responseReturn(res, 500, { error: 'Internal server error' });
+            
         }
     }
 
@@ -64,7 +65,8 @@ class chatController {
             }
             responseReturn(res, 200, { messages, currentSeller })
         } catch (error) {
-            console.log(error)
+            responseReturn(res, 500, { error: 'Internal server error' });
+            
         }
     }
 
@@ -97,7 +99,8 @@ class chatController {
             })
             responseReturn(res, 200, { messages })
         } catch (error) {
-            console.log(error)
+            responseReturn(res, 500, { error: 'Internal server error' });
+            
         }
     }
 }
